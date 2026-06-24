@@ -1,0 +1,5 @@
+{
+  "name": "Repo Scanner",
+  "description": "Decentralized security auditing tool using GenLayer's AI validator network to scan GitHub files for exposed secrets.",
+  "requestFramePermissions": []
+}
