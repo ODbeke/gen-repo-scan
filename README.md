@@ -2,6 +2,18 @@
 
 A decentralized, on-chain security auditing protocol built on GenLayer. It uses AI validator networks (via GenVM) to scan public GitHub codebases and recent commit history diffs for exposed credentials, secret keys, API tokens, and database connection URIs.
 
+---
+
+## Milestone Submission Details
+
+- **Project Name:** GenLayer Smart Repo Scanner
+- **Builder:** ODbeke
+- **Live Demo Link:** [https://gen-repo-scan.vercel.app/](https://gen-repo-scan.vercel.app/)
+- **Deployed Contract Address (StudioNet):** `0x56651EDE70D20C192031C9E11f217d742707DD3a`
+- **Submission Type:** Milestone Project
+
+---
+
 By utilizing GenLayer's **Optimistic Democracy** consensus, multiple validators run independent Large Language Models (LLMs) and fetch files off-chain via browser renders, arriving at an on-chain, trustless agreement on the security status of the code.
 
 ---
@@ -111,3 +123,30 @@ To verify frontend builds successfully for production:
 ```bash
 npm run build
 ```
+
+---
+
+## Milestone Upgrades & Changelog
+
+This project has been heavily upgraded from its initial submission to meet production-grade standards for GenLayer milestone review. Below is a detailed log of the changes:
+
+### 1. Architectural Reorganization
+- Reorganized codebase into professional directories: `contracts/` (Intelligent Contracts), `tests/` (unit tests), and `scripts/` (deploy scripts).
+- Standardized file names: Renamed the contract from `contract.py` to `repo_scan.py`.
+- Added standard `.gitignore` config to filter python compilation artifacts, linter files, and build directories.
+
+### 2. Smart Contract Upgrades (`contracts/repo_scan.py`)
+- **Semantic Consensus (`prompt_comparative`):** Swapped the rigid `strict_eq` checking for `gl.eq_principle.prompt_comparative`. Instead of requiring binary-identical JSON strings across validators (which fails frequently on minor LLM formatting or whitespace changes), consensus is now robustly evaluated on semantic agreement of the security logs.
+- **Fail-Safe Web Handling:** Replaced loose web downloads with a robust error boundary. If target URLs fail to fetch (such as private repository 404s), the contract deterministically aborts and logs `FETCH_FAILED` rather than silently scanning empty files and declaring them `SECURE`.
+- **Scanned Targets Audit Log:** The contract now returns the list of successfully retrieved file paths in its JSON payload, allowing the client to verify what was audited.
+- **Commit History & Diff Support:** Added specialized prompt logic allowing validators to check git diff files (detecting `+` additions for new secrets and ignoring `-` deletions).
+
+### 3. Frontend Upgrades (`src/App.tsx` & `src/hooks/useWallet.ts`)
+- **Multi-File Crawling:** Configured the frontend to dynamically find the top 2 highest-risk files in a repository via the GitHub REST API and combine them with the latest commit `.diff` URL, sending them as a comma-separated query to the contract.
+- **Consensus Receipt Inspector:** Built a glowing glassmorphic "Consensus Proof" viewer modal. The modal displays the raw base64-encoded receipt payload and parses out validator signatures, votes, gas used, and leader output.
+- **Improved UX States:** Added custom renderers for `FETCH_FAILED` errors and listed audited targets dynamically in the results card.
+
+### 4. Unit Testing and Automation
+- Created `gltest.config.yaml` and `tests/conftest.py` setting up path injection and network configurations.
+- Implemented a suite of 5 direct-mode unit tests (`tests/test_contract.py`) covering clean scans, vulnerability audits, empty strings, download failures, and deployments.
+- Created `scripts/deploy.py` for automated contract compilation and StudioNet deployments.
