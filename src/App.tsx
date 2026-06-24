@@ -13,7 +13,7 @@ const isAddress = (addr: string | null | undefined): addr is `0x${string}` => {
 };
 
 const VITE_CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
-const FALLBACK_CONTRACT = '0x56651EDE70D20C192031C9E11f217d742707DD3a' as `0x${string}`;
+const FALLBACK_CONTRACT = '0xDBFaC2b4027786bC423382288ABBfb442Da26a82' as `0x${string}`;
 const CONTRACT_ADDRESS = isAddress(VITE_CONTRACT_ADDRESS) ? VITE_CONTRACT_ADDRESS : FALLBACK_CONTRACT;
 
 interface ScanResult {

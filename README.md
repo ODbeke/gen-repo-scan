@@ -9,7 +9,7 @@ A decentralized, on-chain security auditing protocol built on GenLayer. It uses 
 - **Project Name:** GenLayer Smart Repo Scanner
 - **Builder:** ODbeke
 - **Live Demo Link:** [https://gen-repo-scan.vercel.app/](https://gen-repo-scan.vercel.app/)
-- **Deployed Contract Address (StudioNet):** `0x56651EDE70D20C192031C9E11f217d742707DD3a`
+- **Deployed Contract Address (StudioNet):** `0xDBFaC2b4027786bC423382288ABBfb442Da26a82`
 - **Submission Type:** Milestone Project
 
 ---
