@@ -74,21 +74,8 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState('');
   const [result, setResult] = useState<ScanResult | null>(null);
-  const [rawReceipt, setRawReceipt] = useState<any>(null);
-  const [showReceiptModal, setShowReceiptModal] = useState(false);
+  const [txHash, setTxHash] = useState<string>('');
   const [error, setError] = useState('');
-
-  const getBase64Receipt = () => {
-    if (!rawReceipt) return '';
-    try {
-      const serialized = JSON.stringify(rawReceipt, (key, value) => 
-        typeof value === 'bigint' ? value.toString() : value
-      );
-      return btoa(serialized);
-    } catch (e) {
-      return 'Error encoding receipt: ' + String(e);
-    }
-  };
 
   const handleAnalyze = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,7 +94,7 @@ export default function App() {
     setLoading(true);
     setError('');
     setResult(null);
-    setRawReceipt(null);
+    setTxHash('');
 
     // If it's a GitHub URL, parse it to find sensitive files
     if (targetUrl.startsWith('https://github.com/')) {
@@ -230,6 +217,7 @@ export default function App() {
         args: [targetUrl],
         value: 0n,
       });
+      setTxHash(scanTxHash);
 
       setLoadingStep('Awaiting Consensus on multi-file audit (1-2 minutes)...');
       const scanReceipt: any = await readClient.waitForTransactionReceipt({
@@ -239,8 +227,6 @@ export default function App() {
         interval: 2000,
         retries: 300,
       } as any);
-
-      setRawReceipt(scanReceipt);
 
       // Extract the returned scanId natively from the consensus data payload
       let scanId = 1;
@@ -584,15 +570,16 @@ export default function App() {
                 <p className="text-[10px] text-slate-500 font-mono uppercase tracking-[0.2em]">
                   Verified by GenLayer StudioNet Consensus
                 </p>
-                {rawReceipt && (
-                  <button
-                    onClick={() => setShowReceiptModal(true)}
-                    type="button"
+                {txHash && (
+                  <a
+                    href={`https://explorer-studio.genlayer.com/tx/${txHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 hover:text-indigo-300 border border-indigo-500/20 hover:border-indigo-500/40 px-4 py-2 rounded-xl text-xs font-bold transition-all"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                     View Consensus Proof
-                  </button>
+                  </a>
                 )}
               </div>
             </motion.div>
